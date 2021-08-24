@@ -1,15 +1,13 @@
-#include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/device.h>
 #include <linux/input.h>
 #include <linux/hid.h>
 #include "hid-ids.h"
 
 
 static void send_key(struct input_dev *inputd, unsigned int keycode) { //emulate keyboard single key press and release.
-	input_event(inputd, EV_KEY, keycode, 1);
+	input_report_key(inputd, keycode, 1);
 	input_sync(inputd);
-	input_event(inputd, EV_KEY, keycode, 0);
+	input_report_key(inputd, keycode, 0);
 	input_sync(inputd);
 }
 
@@ -21,19 +19,24 @@ static int gigabyte_raw_event(struct hid_device *hdev,
 
 	if(unlikely(report->id == 4 && size == 4)) { //if report comes from vendor usage page
 		switch(data[3]) {
-			//pseudo-remap the fn keys based on their hid code value.
+			/* 
+			* All FN-keys (except vol_up, vol_down, vol_mute) send only key presses and no key releases.
+			* We simulate an instaneous key press and release at the cost of the ability to handle long-press of a key.
+			*/
 			case 0x7c:
-				SEND_KEY(KEY_WLAN);
+				SEND_KEY(KEY_WLAN); //TODO: Fix not working for me (running Gnome 40 and kernel 5.13).
 				break;
 			case 0x7d:
-				SEND_KEY(KEY_BRIGHTNESSDOWN);
+				SEND_KEY(KEY_BRIGHTNESSDOWN); 
 				break;
 			case 0x7e:
 				SEND_KEY(KEY_BRIGHTNESSUP);
 				break;
 			case 0x81:
-				SEND_KEY(KEY_TOUCHPAD_TOGGLE);
+				SEND_KEY(KEY_TOUCHPAD_TOGGLE); //TODO: Fix not working for me (running Gnome 40 and kernel 5.13).
 				break;
+		
+			//TODO: Add support for remaining non-working fn-keys keys.
 		}
 	}
 
