@@ -4,6 +4,9 @@ Custom HID Quirks Driver that fixes function keys not working in the Gigabyte Ae
 Works by intercepting non-HID compliant usages raw and emulating the correct keycode presses.
 
 ## Notes
+
+- Compatible with the Chu Yuen Keyboard for the Gigabyte Aero 15 SB (Vendor ID: ID 1044, Product ID: 7A3B).
+- To check compatibility run `lsusb`, find your keyboard and compare the ID values with the ones stated above.
 - At the moment I've managed to get only the brightness keys to work on my system *(Fedora 34; Kernel 5.13.12; Gnome 40.4)*. I am investigating why the wifi and touchpad toggle keys are not working.
 
 - Make sure you have the kernel headers installed for the kernel version your PC is running. To see if already installed on Arch/Manjaro run `pacman -Q linux-headers`.
@@ -17,10 +20,19 @@ Works by intercepting non-HID compliant usages raw and emulating the correct key
 
 To load the module manually do :`sudo modprobe fn_keys_mod`
 
-To load the module automatically on startup :
-1. `sudo -s`
-2. `cd /etc/modules-load.d`
-3. `echo fn_keys_mod>fn_keys_mod.conf`
+To load the module automatically on startup you need to edit the GRUB bootloader configuration file and specify a parameter for the usbhid kernel module.
+
+To do that :
+1. `sudo nano /etc/default/grub`
+2. Find the GRUB_CMDLINE_LINUX entry.
+3. Append the following kernel parameter at the end of said entry's line :
+4.  `ushid.quirks=0x1044:0x7a3b:0x0000`
+5. Ctrl+0 and CTRL+X to save and quit nano.
+6. If on Ubuntu run : `update-grub` else:
+7.  `grub2-mkconfig -o /etc/grub2.cfg`
+8. `grub2-mkconfig -o /etc/grub2-efi.cfg`
+9. Done! Reboot and check if the fn brightness keys work.
+
 
 # How to survive kernel updates
 
