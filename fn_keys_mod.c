@@ -3,6 +3,8 @@
 #include <linux/hid.h>
 #include "hid-ids.h"
 
+#define SEND_KEY(c) send_key( ((report->field)[0])->hidinput->input, (c));
+
 
 static void send_key(struct input_dev *inputd, unsigned int keycode) { //emulate keyboard single key press and release.
 	input_report_key(inputd, keycode, 1);
@@ -10,8 +12,6 @@ static void send_key(struct input_dev *inputd, unsigned int keycode) { //emulate
 	input_report_key(inputd, keycode, 0);
 	input_sync(inputd);
 }
-
-#define SEND_KEY(c) send_key( ((report->field)[0])->hidinput->input, (c));
 
 static int gigabyte_raw_event(struct hid_device *hdev,
 			struct hid_report *report, u8 *data, int size)
@@ -48,7 +48,7 @@ static int gigabyte_raw_event(struct hid_device *hdev,
 
 static const struct hid_device_id gigabyte_devices[] = {
 	//binding to HID_GROUP_GENERIC to let hid-multitouch.c handle the touchpad and trackpoint.
-	{.bus=BUS_USB, .group=HID_GROUP_GENERIC, .vendor=USB_VENDOR_ID_GIGABYTE, .product=USB_DEVICE_ID_GIGABYTE_AERO15SB},
+	{.bus=BUS_USB, .group=HID_GROUP_GENERIC, .vendor=USB_VENDOR_ID_CHUYEN, .product=USB_DEVICE_ID_CHUYEN_7A3B},
 }; 
 //Array of Structs ; hid_device_id is a struct as well.
 

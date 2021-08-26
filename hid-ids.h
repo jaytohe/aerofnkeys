@@ -14,8 +14,9 @@
 #ifndef HID_IDS_H_FILE
 #define HID_IDS_H_FILE
 
-#define USB_VENDOR_ID_GIGABYTE		0x1044
-#define USB_DEVICE_ID_GIGABYTE_AERO15SB		0x7a3b
+//Vendor and Device IDs for Gigabyte Aero 15 SB Keyboard
+#define USB_VENDOR_ID_CHUYEN		0x1044
+#define USB_DEVICE_ID_CHUYEN_7A3B	0x7a3b
 
 #define USB_VENDOR_ID_258A		0x258a
 #define USB_DEVICE_ID_258A_6A88		0x6a88
