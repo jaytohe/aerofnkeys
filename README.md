@@ -26,19 +26,23 @@ To do that :
 1. `sudo nano /etc/default/grub`
 2. Find the GRUB_CMDLINE_LINUX entry.
 3. Append the following kernel parameter at the end of said entry's line :
-4.  `ushid.quirks=0x1044:0x7a3b:0x0000`
-5. Ctrl+0 and CTRL+X to save and quit nano.
+4.  `usbhid.quirks=0x1044:0x7a3b:0x0000`
+5. Ctrl+O and CTRL+X to save and quit nano.
 6. If on Ubuntu run : `update-grub` else:
-7.  `grub2-mkconfig -o /etc/grub2.cfg`
-8. `grub2-mkconfig -o /etc/grub2-efi.cfg`
+7.  `grub-mkconfig -o /boot/grub/grub.cfg`
 9. Done! Reboot and check if the fn brightness keys work.
 
+If not, undo the changes to /etc/default/grub and run grub-mkconfig again. Afterwards, do:
+
+`echo fn_keys_mod>/etc/modules-load.d/load_fn_keys_mod.conf`
+
+This should manually load the fn_keys_mod module on boot without the use of usbhid. Reboot and check.
 
 # How to survive kernel updates
 
 The steps above will install and enable the module only for the currently running kernel version. If the kernel is updated, the module will need to be re-compiled. 
 
-To avoid the hassle, you can use the [Dynamic Kernel Module Support (DKMS)](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support) to automatically recompile and enable the module when a kernel update occurs.
+To avoid the hassle, you can use the [Dynamic Kernel Module Support (DKMS)](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support) to automatically rebuild when a kernel update occurs.
 
 I recommend following [this guide](https://wiki.centos.org/HowTos/BuildingKernelModules#Building_a_kernel_module_using_Dynamic_Kernel_Module_Support_.28DKMS.29).
 
